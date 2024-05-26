@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #333;
+    }
+    form {
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      width: 200px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #weather-content {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 100%;
+      max-width: 600px;
+    }
+    .weather-item {
+      margin-bottom: 10px;
+    }
+    .weather-item h3 {
+      margin: 0;
+      color: #007bff;
+    }
+    .weather-item p {
+      margin: 5px 0;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Weather Forecast</h1>
+  <form action="/submit" method="post">
+    <input type="text" name="city" placeholder="Enter city name">
+    <button type="submit">Get Weather</button>
+  </form>
+  <div id="weather-content">
+    <%= content %>
+  </div>
+  <script>
+    // Assuming content is in JSON string format and needs to be parsed and displayed
+    const content = <%- JSON.stringify(content) %>;
+    if (content) {
+      const weatherContent = document.getElementById('weather-content');
+      weatherContent.innerHTML = ''; // Clear existing content
+      
+      // Parse the JSON data
+      const data = JSON.parse(content);
+
+      // Create HTML for weather data
+      const location = document.createElement('div');
+      location.classList.add('weather-item');
+      location.innerHTML = `<h3>Location: ${data.location.name}, ${data.location.country}</h3>`;
+      weatherContent.appendChild(location);
+
+      const temperature = document.createElement('div');
+      temperature.classList.add('weather-item');
+      temperature.innerHTML = `<p>Temperature: ${data.current.temp_c} °C</p>`;
+      weatherContent.appendChild(temperature);
+
+      const condition = document.createElement('div');
+      condition.classList.add('weather-item');
+      condition.innerHTML = `<p>Condition: ${data.current.condition.text}</p>`;
+      weatherContent.appendChild(condition);
+
+      const forecast = document.createElement('div');
+      forecast.classList.add('weather-item');
+      forecast.innerHTML = `<p>Forecast: ${data.forecast.forecastday[0].day.condition.text}</p>`;
+      weatherContent.appendChild(forecast);
+    }
+  </script>
+</body>
+</html>
